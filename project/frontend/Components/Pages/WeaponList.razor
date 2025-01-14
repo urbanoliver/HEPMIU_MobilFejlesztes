@@ -1,0 +1,246 @@
+﻿@page "/weapon-list"
+@using WeaponMobileApp.BusinessModel
+@using WeaponMobileApp.Services
+
+@inject NavigationManager NavigationManager
+@inject WeaponService WeaponService
+
+<h1>Fegyverek Listája</h1>
+
+@if (isLoading)
+{
+    <p>Loading weapons...</p>
+}
+else if (weapons == null || weapons.Count == 0)
+{
+    <p>No weapons available.</p>
+}
+else
+{
+    <div class="table-container">
+        <table class="weapon-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Név</th>
+                    <th class="hide-mobile">Gyártó</th>
+                    <th>Ár</th>
+                    <th>Mennyiség</th>
+                    <th>Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var weapon in weapons)
+                {
+                    <tr>
+                        <td data-label="Id">@weapon.Id</td>
+                        <td data-label="Név">@weapon.Name</td>
+                        <td data-label="Gyártó" class="hide-mobile">@weapon.Manufacturer</td>
+                        <td data-label="Ár">@weapon.Price.ToString("C0")</td>
+                        <td data-label="Mennyiség">@weapon.Quantity</td>
+                        <td data-label="Műveletek" class="actions-cell">
+                            <button class="edit-btn" @onclick="() => EditWeapon(weapon.Id)">Szerkesztés</button>
+                            <button class="delete-btn" @onclick="() => DeleteWeapon(weapon.Id)">Törlés</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <style>
+        .container {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: black;
+        }
+
+        h1 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .weapon-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #333;
+        }
+
+            .weapon-table th,
+            .weapon-table td {
+                padding: 12px;
+                text-align: left;
+                font-size: 16px;
+                border: 1px solid #333;
+                color: #ffa500;
+            }
+
+            .weapon-table th {
+                background-color: #333;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #ffd700;
+            }
+
+            .weapon-table tr {
+                border-bottom: 5px solid #ffa500;
+            }
+
+                .weapon-table tr:nth-child(even) {
+                    background-color: #2a2a2a;
+                }
+
+                .weapon-table tr:hover {
+                    background-color: #333;
+                }
+
+        .actions-cell {
+            text-align: center;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .edit-btn {
+            background-color: #28a745;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .edit-btn:hover {
+            background-color: #218838;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        @@media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .weapon-table th,
+            .weapon-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .hide-mobile {
+                display: none;
+            }
+
+            .weapon-table td {
+                display: block;
+                text-align: right;
+                border-bottom: 1px solid #333;
+            }
+
+                .weapon-table td:before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    color: #ffd700;
+                }
+
+            .weapon-table tr {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .weapon-table {
+                border: none;
+            }
+
+                .weapon-table th {
+                    display: none;
+                }
+
+                .weapon-table tr {
+                    border-bottom: 5px solid #ffa500;
+                }
+
+            .actions-cell {
+                text-align: left;
+            }
+
+            .edit-btn,
+            .delete-btn {
+                display: block;
+                width: 100%;
+                margin: 4px 0;
+            }
+        }
+    </style>
+
+    @code {
+    private List<Weapon> weapons;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadWeapons();
+    }
+
+    private async Task LoadWeapons()
+    {
+        isLoading = true;
+        try
+        {
+            weapons = await WeaponService.GetWeaponsAsync();
+            Console.WriteLine($"Fetched {weapons.Count} weapons.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching weapons: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void EditWeapon(int Id)
+    {
+        NavigationManager.NavigateTo($"/modify-weapon/{Id}");
+
+    }
+
+    protected async Task DeleteWeapon(int Id)
+    {
+        try
+        {
+            await WeaponService.DeleteWeaponAsync(Id);
+
+            Console.WriteLine($"Weapon with ID {Id} deleted successfully.");
+
+            await LoadWeapons();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting weapon: {ex.Message}");
+        }
+    }
+}
+}

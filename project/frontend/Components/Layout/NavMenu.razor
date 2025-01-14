@@ -1,0 +1,87 @@
+﻿<div class="top-row navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Weapon Manager</a>
+    </div>
+</div>
+
+<hr class="divider" />
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weapon-list">
+                <span class="bi bi-list-nested" aria-hidden="true"></span> Fegyverek
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="add-weapon">
+                <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Fegyver hozzáadása
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="about">
+                <span class="bi bi-info-circle-fill" aria-hidden="true"></span> Rólunk
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+<style>
+    
+    .top-row {
+        background-color: black; 
+        padding: 10px; 
+        border-bottom: 1px solid white;
+    }
+
+    .navbar-brand {
+        color: orange; 
+        font-size: 24px; 
+    }
+
+    .divider {
+        height: 1px; 
+        background-color: white;
+        border: none; 
+        margin: 0; 
+    }
+
+    .nav-scrollable {
+        background-color: black; 
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: orange; 
+        padding: 10px;
+    }
+
+    .nav-link:hover {
+        background-color: #333; 
+    }
+
+    .nav-link .bi {
+        padding-bottom: 45px;
+        vertical-align: middle;
+        font-size: 1.2em;
+    }
+
+    .nav-item {
+        border-bottom: 1px solid; 
+    }  
+
+    .nav-item:last-child {
+        border-bottom: solid;
+    }
+</style>

@@ -1,0 +1,120 @@
+﻿@page "/add-weapon"
+@using System.ComponentModel.DataAnnotations
+@using WeaponMobileApp.BusinessModel
+@using WeaponMobileApp.Services
+
+@inject NavigationManager NavigationManager
+@inject WeaponService WeaponService
+
+<div class="container">
+    <h1>Új Fegyver Hozzáadása</h1>
+
+    <EditForm Model="@newWeapon" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Név:</label>
+            <InputText id="name" @bind-Value="newWeapon.Name" class="form-control" />
+            <ValidationMessage For="@(() => newWeapon.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label for="manufacturer">Gyártó:</label>
+            <InputText id="manufacturer" @bind-Value="newWeapon.Manufacturer" class="form-control" />
+            <ValidationMessage For="@(() => newWeapon.Manufacturer)" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Ár:</label>
+            <InputNumber id="price" @bind-Value="newWeapon.Price" class="form-control" />
+            <ValidationMessage For="@(() => newWeapon.Price)" />
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Mennyiség:</label>
+            <InputNumber id="quantity" @bind-Value="newWeapon.Quantity" class="form-control" />
+            <ValidationMessage For="@(() => newWeapon.Quantity)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Fegyver Hozzáadása</button>
+    </EditForm>
+</div>
+
+<style>
+    .container {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: black; 
+    }
+
+    h1 {
+        color: #ffd700; 
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #ffa500; 
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #333; 
+        border-radius: 4px;
+        background-color: #1a1a1a; 
+        color: #fff; 
+    }
+
+    .form-control::placeholder {
+        color: #bbb; 
+    }
+
+    .btn-primary {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #ffa500; 
+        color: black; 
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #ff8c00; 
+    }
+
+    .validation-message {
+        color: #ff4500; 
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+
+@code {
+    private UpdateWeaponDTO newWeapon = new UpdateWeaponDTO();
+    private List<Weapon> weapons;
+
+    private async Task HandleValidSubmit()
+    {
+        await WeaponService.SaveWeaponAsync(newWeapon,weapons);
+        Console.WriteLine($"Adding new weapon: {newWeapon.Name}");
+        NavigationManager.NavigateTo("/weapon-list");
+    }
+
+}
