@@ -1,0 +1,6 @@
+@WeaponMobileAPI_HostAddress = http://localhost:5091
+
+GET {{WeaponMobileAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
